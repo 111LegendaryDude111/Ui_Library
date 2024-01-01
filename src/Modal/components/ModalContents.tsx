@@ -48,6 +48,12 @@ export const ModalContent: FC<ModalContentProps> = ({
           wrapper: styles.sideModalWrapper,
         };
 
+      case ModalPosition.top:
+        return {
+          content: styles.topModal,
+          wrapper: styles.topModalWrapper,
+        };
+
       default:
         return {
           content: styles.centerModal,

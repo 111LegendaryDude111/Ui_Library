@@ -30,7 +30,7 @@ function App() {
       <Modal
         onClose={modalHandler}
         isVisible={isVisible}
-        modalPosition={ModalPosition.bottom}
+        modalPosition={ModalPosition.top}
       />
     </div>
   );
