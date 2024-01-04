@@ -30,7 +30,9 @@ function App() {
       <Modal
         onClose={modalHandler}
         isVisible={isVisible}
-        modalPosition={ModalPosition.top}
+        modalPosition={ModalPosition.left}
+        header={"Header"}
+        content={<span>Content text</span>}
       />
     </div>
   );

@@ -1,6 +1,7 @@
 export enum ModalPosition {
   center = "center",
   bottom = "bottom",
-  side = "side",
+  right = "right",
+  left = "left",
   top = "top",
 }

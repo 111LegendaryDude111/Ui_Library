@@ -6,11 +6,15 @@ import { ModalPosition } from "../types";
 type ModalContentProps = {
   onClose: VoidFunction;
   modalPosition?: ModalPosition;
+  header: JSX.Element | string;
+  content: JSX.Element;
 };
 
 export const ModalContent: FC<ModalContentProps> = ({
   onClose,
   modalPosition,
+  header,
+  content,
 }) => {
   const ref = useRef<null | HTMLDivElement>(null);
   useEffect(() => {
@@ -39,18 +43,23 @@ export const ModalContent: FC<ModalContentProps> = ({
     switch (position) {
       case ModalPosition.bottom:
         return {
-          content: styles.bottomModal,
+          contentStyle: styles.bottomModal,
           wrapper: styles.bottomModalWrapper,
         };
-      case ModalPosition.side:
+      case ModalPosition.right:
         return {
-          content: styles.sideModal,
-          wrapper: styles.sideModalWrapper,
+          contentStyle: styles.rightModal,
+          wrapper: styles.rightModalWrapper,
+        };
+      case ModalPosition.left:
+        return {
+          contentStyle: styles.lefttModal,
+          wrapper: styles.lefttModalWrapper,
         };
 
       case ModalPosition.top:
         return {
-          content: styles.topModal,
+          contentStyle: styles.topModal,
           wrapper: styles.topModalWrapper,
         };
 
@@ -62,15 +71,17 @@ export const ModalContent: FC<ModalContentProps> = ({
     }
   };
 
-  const { content, wrapper } = className(modalPosition);
+  const { contentStyle, wrapper } = className(modalPosition);
 
   return (
     <div className={wrapper} onClick={closeWrapper} ref={ref} id="Modal">
-      <div className={content}>
+      <div className={contentStyle}>
         <ModalHeader onClose={onClose} />
         <div className={styles.contentContainer}>
-          <div>Header</div>
-          <div>Content</div>
+          <div>
+            {typeof header === "string" ? <span>{header}</span> : header}
+          </div>
+          <div>{content}</div>
         </div>
       </div>
     </div>

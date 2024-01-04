@@ -8,6 +8,7 @@
   z-index: 1;
   position: absolute;
   top: 0;
+  overflow: hidden;
 }
 
 .centerModal {
@@ -35,6 +36,7 @@
   z-index: 1;
   position: absolute;
   bottom: 0;
+  overflow: hidden;
 }
 
 .bottomModal {
@@ -51,7 +53,7 @@
   padding: 20px;
 }
 
-.sideModalWrapper {
+.rightModalWrapper {
   width: 100%;
   height: 100%;
   display: flex;
@@ -61,8 +63,9 @@
   z-index: 1;
   position: absolute;
   top: 0;
+  overflow: hidden;
 }
-.sideModal {
+.rightModal {
   border: 2px solid olivedrab;
   border-radius: 8% 0 0 8%;
   display: flex;
@@ -71,7 +74,32 @@
   height: 100%;
   width: 50%;
   background-color: white;
-  animation-name: sideModal;
+  animation-name: rightModal;
+  animation-duration: 1s;
+}
+
+.lefttModalWrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  overflow: hidden;
+}
+.lefttModal {
+  border: 2px solid olivedrab;
+  border-radius: 0 8% 8% 0;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+  width: 50%;
+  background-color: white;
+  animation-name: lefttModal;
   animation-duration: 1s;
 }
 
@@ -108,7 +136,7 @@
   align-items: end;
   flex-direction: column;
   width: 100%;
-  padding: 10px;
+  padding: 20px;
 }
 
 .contentContainer {
@@ -124,9 +152,18 @@
   }
 }
 
-@keyframes sideModal {
+@keyframes rightModal {
   from {
     transform: translateX(200%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes lefttModal {
+  from {
+    transform: translateX(-200%);
   }
   to {
     transform: translateX(0);
