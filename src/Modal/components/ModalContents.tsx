@@ -8,6 +8,7 @@ type ModalContentProps = {
   modalPosition?: ModalPosition;
   header: JSX.Element | string;
   content: JSX.Element;
+  // openModalsArray: VoidFunction[];
 };
 
 export const ModalContent: FC<ModalContentProps> = ({
@@ -15,6 +16,7 @@ export const ModalContent: FC<ModalContentProps> = ({
   modalPosition,
   header,
   content,
+  // openModalsArray,
 }) => {
   const ref = useRef<null | HTMLDivElement>(null);
   useEffect(() => {
@@ -65,7 +67,7 @@ export const ModalContent: FC<ModalContentProps> = ({
 
       default:
         return {
-          content: styles.centerModal,
+          contentStyle: styles.centerModal,
           wrapper: styles.centerModalWrapper,
         };
     }
