@@ -18,6 +18,12 @@ export const Modal: FC<ModalProps> = ({
   header,
   content,
 }) => {
+  // const [openModalsArray, setOpenModalsArray] = useState<VoidFunction[]>([]);
+
+  // useEffect(() => {
+  //   setOpenModalsArray((prev) => [...prev, onClose]);
+  // }, [onClose]);
+
   return (
     <>
       {isVisible && (
@@ -28,6 +34,7 @@ export const Modal: FC<ModalProps> = ({
               modalPosition={modalPosition}
               header={header}
               content={content}
+              // openModalsArray={openModalsArray}
             />,
             document.getElementById("root")!,
             "modal"
