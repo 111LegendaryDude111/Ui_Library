@@ -1,6 +1,6 @@
 import { createPortal } from "react-dom";
 import { ModalContent } from "./components/ModalContents";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { ModalPosition } from "./types";
 
 type ModalProps = {
@@ -11,6 +11,8 @@ type ModalProps = {
   content: JSX.Element;
 };
 
+const openModalsArray: VoidFunction[] = [];
+
 export const Modal: FC<ModalProps> = ({
   onClose,
   isVisible,
@@ -18,11 +20,11 @@ export const Modal: FC<ModalProps> = ({
   header,
   content,
 }) => {
-  // const [openModalsArray, setOpenModalsArray] = useState<VoidFunction[]>([]);
-
-  // useEffect(() => {
-  //   setOpenModalsArray((prev) => [...prev, onClose]);
-  // }, [onClose]);
+  useEffect(() => {
+    if (isVisible) {
+      openModalsArray.push(onClose);
+    }
+  }, [isVisible, onClose]);
 
   return (
     <>
@@ -34,7 +36,7 @@ export const Modal: FC<ModalProps> = ({
               modalPosition={modalPosition}
               header={header}
               content={content}
-              // openModalsArray={openModalsArray}
+              openModalsArray={openModalsArray}
             />,
             document.getElementById("root")!,
             "modal"
