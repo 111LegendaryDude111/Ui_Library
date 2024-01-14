@@ -8,7 +8,7 @@ type ModalContentProps = {
   modalPosition?: ModalPosition;
   header: JSX.Element | string;
   content: JSX.Element;
-  // openModalsArray: VoidFunction[];
+  openModalsArray: VoidFunction[];
 };
 
 export const ModalContent: FC<ModalContentProps> = ({
@@ -16,14 +16,16 @@ export const ModalContent: FC<ModalContentProps> = ({
   modalPosition,
   header,
   content,
-  // openModalsArray,
+  openModalsArray,
 }) => {
   const ref = useRef<null | HTMLDivElement>(null);
   useEffect(() => {
     const keyCloseModal = (e: KeyboardEvent) => {
       e.preventDefault();
       if (e.key === "Escape") {
-        onClose();
+        // onClose();
+        const closeModal = openModalsArray.pop();
+        closeModal?.();
       }
     };
     document.addEventListener("keydown", keyCloseModal);
@@ -31,7 +33,7 @@ export const ModalContent: FC<ModalContentProps> = ({
     return () => {
       document.removeEventListener("keydown", keyCloseModal);
     };
-  }, [onClose]);
+  }, [onClose, openModalsArray]);
 
   const closeWrapper = (e: SyntheticEvent) => {
     const target = e.target as HTMLDivElement;
