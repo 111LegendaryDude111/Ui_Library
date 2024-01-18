@@ -27,7 +27,7 @@ const ContentComponent: FC = () => {
         onClose={modalHandlerTwo}
         modalPosition={ModalPosition.center}
         header={<h1>Header #2</h1>}
-        content={<div>Content #2</div>}
+        content={<ContentComponent3 />}
       />
     </div>
   );
@@ -75,9 +75,9 @@ function App() {
         </button>
       </Tooltip>
       <Modal
-        onClose={modalHandler}
         isVisible={isVisible}
-        modalPosition={ModalPosition.center}
+        onClose={modalHandler}
+        modalPosition={ModalPosition.bottom}
         header={"Header"}
         content={<ContentComponent />}
       />
