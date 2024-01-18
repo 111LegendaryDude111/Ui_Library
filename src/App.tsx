@@ -2,33 +2,8 @@ import { FC, useState } from "react";
 import "./App.css";
 import { Modal } from "./Modal/Modal";
 import { ModalPosition } from "./Modal/types";
-const ContentComponent3: FC = () => {
-  const [isVisibleModal3, setIsVisibleModal3] = useState<boolean>(false);
-
-  const modalHandler3 = () => {
-    setIsVisibleModal3((prev) => !prev);
-  };
-  return (
-    <div>
-      <h3>Content</h3>
-      <button
-        onClick={modalHandler3}
-        style={{
-          width: "300px",
-        }}
-      >
-        openModal #3
-      </button>
-      <Modal
-        isVisible={isVisibleModal3}
-        onClose={modalHandler3}
-        modalPosition={ModalPosition.right}
-        header={<h1>Header #3</h1>}
-        content={<div>Content #3</div>}
-      />
-    </div>
-  );
-};
+import { Tooltip } from "./Tooltip/Tooltip";
+import { Dropdown, Option } from "./Dropdown/Dropdown";
 
 const ContentComponent: FC = () => {
   const [isVisibleModalTwo, setIsVisibleModalTwo] = useState<boolean>(false);
@@ -65,24 +40,40 @@ function App() {
   };
   const buttonText = isVisible ? "Close Modal" : "OpenModal";
 
+  const options = [
+    { label: "Опция 1", value: "option1" },
+    { label: "Опция 2", value: "option2" },
+    { label: "Опция 3", value: "option3" },
+  ];
+
+  const handleSelect = (selectedOption: Option) => {
+    console.log(`Выбрана опция: ${selectedOption.label}`);
+  };
   return (
     <div
       style={{
         display: "flex",
-        alignItems: "center",
         width: "100%",
         height: "100%",
         justifyContent: "center",
+        alignItems: "center",
       }}
     >
-      <button
-        onClick={modalHandler}
-        style={{
-          width: "300px",
-        }}
-      >
-        {buttonText}
-      </button>
+      {/* <div>
+        <div>Drpodown</div>
+
+        <Dropdown options={options} onSelect={handleSelect} />
+      </div> */}
+      <Tooltip text={"Открывает модальное окно"}>
+        <button
+          onClick={modalHandler}
+          style={{
+            width: "300px",
+          }}
+        >
+          {buttonText}
+        </button>
+      </Tooltip>
       <Modal
         isVisible={isVisible}
         onClose={modalHandler}
