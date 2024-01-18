@@ -4,7 +4,7 @@ import styles from "./styles.module.css";
 export const ModalHeader: FC<{ onClose: VoidFunction }> = ({ onClose }) => {
   return (
     <div className={styles.headerWrapper}>
-      <span onClick={onClose} style={{ padding: "0  20px 0 " }}>
+      <span onClick={onClose} className={styles.cross}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="30"

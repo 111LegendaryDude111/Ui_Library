@@ -22,8 +22,8 @@
   width: 50%;
   padding: 20px;
   background-color: white;
-  animation-name: modal;
-  animation-duration: 1s;
+
+  position: absolute;
 }
 
 .bottomModalWrapper {
@@ -48,9 +48,9 @@
   height: 50%;
   width: 100%;
   background-color: white;
-  animation-name: modal;
-  animation-duration: 1s;
+
   padding: 20px;
+  position: absolute;
 }
 
 .rightModalWrapper {
@@ -74,11 +74,9 @@
   height: 100%;
   width: 50%;
   background-color: white;
-  animation-name: rightModal;
-  animation-duration: 1s;
 }
 
-.lefttModalWrapper {
+.leftModalWrapper {
   width: 100%;
   height: 100%;
   display: flex;
@@ -90,7 +88,7 @@
   top: 0;
   overflow: hidden;
 }
-.lefttModal {
+.leftModal {
   border: 2px solid olivedrab;
   border-radius: 0 8% 8% 0;
   display: flex;
@@ -99,8 +97,7 @@
   height: 100%;
   width: 50%;
   background-color: white;
-  animation-name: lefttModal;
-  animation-duration: 1s;
+  position: absolute;
 }
 
 .topModalWrapper {
@@ -124,9 +121,8 @@
   height: 50%;
   width: 100%;
   background-color: white;
-  animation-name: topModal;
-  animation-duration: 1s;
   padding: 20px;
+  position: absolute;
 }
 
 .headerWrapper {
@@ -142,39 +138,11 @@
 .contentContainer {
   padding: 10px;
 }
-
-@keyframes modal {
-  from {
-    transform: translateY(200%);
-  }
-  to {
-    transform: translateY(0);
-  }
+.cross {
+  padding: 0 20px 0;
 }
 
-@keyframes rightModal {
-  from {
-    transform: translateX(200%);
-  }
-  to {
-    transform: translateX(0);
-  }
-}
-
-@keyframes lefttModal {
-  from {
-    transform: translateX(-200%);
-  }
-  to {
-    transform: translateX(0);
-  }
-}
-
-@keyframes topModal {
-  from {
-    transform: translateY(-200%);
-  }
-  to {
-    transform: translateY(0);
-  }
+.overlay {
+  position: absolute;
+  inset: 0;
 }

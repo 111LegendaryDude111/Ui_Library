@@ -2,6 +2,33 @@ import { FC, useState } from "react";
 import "./App.css";
 import { Modal } from "./Modal/Modal";
 import { ModalPosition } from "./Modal/types";
+const ContentComponent3: FC = () => {
+  const [isVisibleModal3, setIsVisibleModal3] = useState<boolean>(false);
+
+  const modalHandler3 = () => {
+    setIsVisibleModal3((prev) => !prev);
+  };
+  return (
+    <div>
+      <h3>Content</h3>
+      <button
+        onClick={modalHandler3}
+        style={{
+          width: "300px",
+        }}
+      >
+        openModal #3
+      </button>
+      <Modal
+        isVisible={isVisibleModal3}
+        onClose={modalHandler3}
+        modalPosition={ModalPosition.right}
+        header={<h1>Header #3</h1>}
+        content={<div>Content #3</div>}
+      />
+    </div>
+  );
+};
 
 const ContentComponent: FC = () => {
   const [isVisibleModalTwo, setIsVisibleModalTwo] = useState<boolean>(false);
@@ -25,7 +52,7 @@ const ContentComponent: FC = () => {
         onClose={modalHandlerTwo}
         modalPosition={ModalPosition.center}
         header={<h1>Header #2</h1>}
-        content={<div>Content #2</div>}
+        content={<ContentComponent3 />}
       />
     </div>
   );
@@ -57,9 +84,9 @@ function App() {
         {buttonText}
       </button>
       <Modal
-        onClose={modalHandler}
         isVisible={isVisible}
-        modalPosition={ModalPosition.center}
+        onClose={modalHandler}
+        modalPosition={ModalPosition.bottom}
         header={"Header"}
         content={<ContentComponent />}
       />
