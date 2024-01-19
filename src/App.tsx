@@ -2,9 +2,36 @@ import { FC, useState } from "react";
 import "./App.css";
 import { Modal } from "./Modal/Modal";
 import { ModalPosition } from "./Modal/types";
-import { Tooltip } from "./Tooltip/Tooltip";
+import { Tooltip, TooltipPosition } from "./Tooltip/Tooltip";
 import { Dropdown, Option } from "./Dropdown/Dropdown";
 
+const ContentComponent3: FC = () => {
+  const [isVisibleModalTwo, setIsVisibleModalTwo] = useState<boolean>(false);
+
+  const modalHandlerTwo = () => {
+    setIsVisibleModalTwo((prev) => !prev);
+  };
+  return (
+    <div>
+      <h3>Content</h3>
+      <button
+        onClick={modalHandlerTwo}
+        style={{
+          width: "300px",
+        }}
+      >
+        openModal #3
+      </button>
+      <Modal
+        isVisible={isVisibleModalTwo}
+        onClose={modalHandlerTwo}
+        modalPosition={ModalPosition.center}
+        header={<h1>Header #3</h1>}
+        content={<>Content #3</>}
+      />
+    </div>
+  );
+};
 const ContentComponent: FC = () => {
   const [isVisibleModalTwo, setIsVisibleModalTwo] = useState<boolean>(false);
 
@@ -49,6 +76,7 @@ function App() {
   const handleSelect = (selectedOption: Option) => {
     console.log(`Выбрана опция: ${selectedOption.label}`);
   };
+
   return (
     <div
       style={{
@@ -61,10 +89,12 @@ function App() {
     >
       {/* <div>
         <div>Drpodown</div>
-
         <Dropdown options={options} onSelect={handleSelect} />
       </div> */}
-      <Tooltip text={"Открывает модальное окно"}>
+      <Tooltip
+        position={TooltipPosition.bottom}
+        content={<span>Открывает модальное окно</span>}
+      >
         <button
           onClick={modalHandler}
           style={{
@@ -77,7 +107,7 @@ function App() {
       <Modal
         isVisible={isVisible}
         onClose={modalHandler}
-        modalPosition={ModalPosition.bottom}
+        modalPosition={ModalPosition.center}
         header={"Header"}
         content={<ContentComponent />}
       />

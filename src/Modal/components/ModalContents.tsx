@@ -4,22 +4,20 @@ import { ModalPosition } from "../types";
 import { getClassName } from "./utlils";
 import styles from "./styles.module.css";
 import "../styles.css";
+import { LayerManager } from "../../LayerManager";
 type ModalContentProps = {
   modalPosition: ModalPosition;
   header: JSX.Element | string;
   content: JSX.Element;
-  openModalsArray: VoidFunction[];
 };
 
 export const ModalContent: FC<ModalContentProps> = ({
   modalPosition,
   header,
   content,
-  openModalsArray,
 }) => {
   const closeModal = () => {
-    const close = openModalsArray.pop();
-    close?.();
+    LayerManager.callFn();
   };
 
   const { contentStyle, wrapper } = getClassName(modalPosition);
