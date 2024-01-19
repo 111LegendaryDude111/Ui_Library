@@ -33,6 +33,34 @@ const ContentComponent: FC = () => {
   );
 };
 
+const ContentComponent3: FC = () => {
+  const [isVisibleModal3, setIsVisibleModal3] = useState<boolean>(false);
+
+  const modalHandler3 = () => {
+    setIsVisibleModal3((prev) => !prev);
+  };
+  return (
+    <div>
+      <h3>Content</h3>
+      <button
+        onClick={modalHandler3}
+        style={{
+          width: "300px",
+        }}
+      >
+        openModal #3
+      </button>
+      <Modal
+        isVisible={isVisibleModal3}
+        onClose={modalHandler3}
+        modalPosition={ModalPosition.right}
+        header={<h1>Header #3</h1>}
+        content={<div>Content #3</div>}
+      />
+    </div>
+  );
+};
+
 function App() {
   const [isVisible, setIsVisible] = useState(false);
   const modalHandler = () => {
@@ -59,12 +87,12 @@ function App() {
         alignItems: "center",
       }}
     >
-      {/* <div>
+      <div>
         <div>Drpodown</div>
 
         <Dropdown options={options} onSelect={handleSelect} />
-      </div> */}
-      <Tooltip text={"Открывает модальное окно"}>
+      </div>
+      {/* <Tooltip text={"Открывает модальное окно"}>
         <button
           onClick={modalHandler}
           style={{
@@ -73,7 +101,7 @@ function App() {
         >
           {buttonText}
         </button>
-      </Tooltip>
+      </Tooltip> */}
       <Modal
         isVisible={isVisible}
         onClose={modalHandler}
