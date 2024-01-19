@@ -5,6 +5,7 @@ import "./styles.css";
 import { useEvent } from "../hooks/useEvent";
 import { CSSTransition } from "react-transition-group";
 import { createPortal } from "react-dom";
+import { LayerManager } from "../LayerManager";
 
 type ModalProps = {
   isVisible: boolean;
@@ -13,10 +14,6 @@ type ModalProps = {
   header: JSX.Element | string;
   content: JSX.Element;
 };
-
-const openModalsArray: VoidFunction[] = [];
-
-// window.openModalsArray = openModalsArray;
 
 export const Modal: FC<ModalProps> = ({
   onClose,
@@ -28,26 +25,15 @@ export const Modal: FC<ModalProps> = ({
   const close = useEvent(onClose);
 
   useEffect(() => {
-    if (isVisible) {
-      openModalsArray.push(close);
+    if (!isVisible) {
+      return;
     }
-  }, [close, isVisible]);
-
-  useEffect(() => {
-    const keyCloseModal = (e: KeyboardEvent) => {
-      console.log(openModalsArray);
-      if (e.key === "Escape") {
-        const close = openModalsArray.pop();
-        close?.();
-      }
-    };
-
-    document.addEventListener("keydown", keyCloseModal);
+    LayerManager.register(close);
 
     return () => {
-      document.removeEventListener("keydown", keyCloseModal);
+      LayerManager.unregister(close);
     };
-  }, []);
+  }, [close, isVisible]);
 
   const classNames =
     modalPosition === ModalPosition.center
@@ -73,7 +59,6 @@ export const Modal: FC<ModalProps> = ({
             modalPosition={modalPosition}
             header={header}
             content={content}
-            openModalsArray={openModalsArray}
           />,
           document.getElementById("modal")!,
           "modal"
