@@ -1,9 +1,11 @@
 import { FC, useState } from "react";
 import styles from "./style.module.css";
+
 type TooltipProps = {
   text: string;
   children: JSX.Element;
 };
+
 export const Tooltip: FC<TooltipProps> = ({ text, children }) => {
   const [isVisibleText, setIsVisibleText] = useState(false);
   return (
