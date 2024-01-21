@@ -47,23 +47,26 @@ export const Modal: FC<ModalProps> = ({
       : "bottomModal";
 
   return (
-    <CSSTransition
-      in={isVisible}
-      unmountOnExit
-      timeout={300}
-      classNames={classNames}
-    >
-      {() =>
-        createPortal(
-          <ModalContent
-            modalPosition={modalPosition}
-            header={header}
-            content={content}
-          />,
-          document.getElementById("modal")!,
-          "modal"
-        )
-      }
-    </CSSTransition>
+    <>
+      {isVisible && <div className="overlay"></div>}
+      <CSSTransition
+        in={isVisible}
+        unmountOnExit
+        timeout={300}
+        classNames={classNames}
+      >
+        {() =>
+          createPortal(
+            <ModalContent
+              modalPosition={modalPosition}
+              header={header}
+              content={content}
+            />,
+            document.getElementById("modal")!,
+            "modal"
+          )
+        }
+      </CSSTransition>
+    </>
   );
 };

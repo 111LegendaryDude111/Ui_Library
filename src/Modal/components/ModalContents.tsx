@@ -23,17 +23,19 @@ export const ModalContent: FC<ModalContentProps> = ({
   const { contentStyle, wrapper } = getClassName(modalPosition);
 
   return (
-    <div className={wrapper}>
-      <div className={styles.overlay} onClick={closeModal}></div>
-      <div className={contentStyle}>
-        <ModalHeader onClose={closeModal} />
-        <div className={styles.contentContainer}>
-          <div>
-            {typeof header === "string" ? <span>{header}</span> : header}
+    <>
+      <div className={wrapper}>
+        <div className={styles.overlay} onClick={closeModal}></div>
+        <div className={contentStyle}>
+          <ModalHeader onClose={closeModal} />
+          <div className={styles.contentContainer}>
+            <div>
+              {typeof header === "string" ? <span>{header}</span> : header}
+            </div>
+            <div>{content}</div>
           </div>
-          <div>{content}</div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
