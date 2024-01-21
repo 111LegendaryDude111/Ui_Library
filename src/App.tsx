@@ -25,7 +25,7 @@ const ContentComponent3: FC = () => {
       <Modal
         isVisible={isVisibleModalTwo}
         onClose={modalHandlerTwo}
-        modalPosition={ModalPosition.center}
+        modalPosition={ModalPosition.right}
         header={<h1>Header #3</h1>}
         content={<>Content #3</>}
       />
@@ -52,7 +52,7 @@ const ContentComponent: FC = () => {
       <Modal
         isVisible={isVisibleModalTwo}
         onClose={modalHandlerTwo}
-        modalPosition={ModalPosition.center}
+        modalPosition={ModalPosition.left}
         header={<h1>Header #2</h1>}
         content={<ContentComponent3 />}
       />
@@ -71,6 +71,12 @@ function App() {
     console.log(`Выбрана опция: ${selectedValue}`);
   };
 
+  const options = [
+    { label: "option1", value: "Опция 1" },
+    { label: "option2", value: "Опция 2" },
+    { label: "option3", value: "Опция 3" },
+  ];
+
   return (
     <div
       style={{
@@ -83,21 +89,16 @@ function App() {
     >
       <div>
         <Dropdown withDivider={true}>
-          <Dropdown.Option
-            value={"option1"}
-            title={"Опция 1"}
-            handleValue={handleSelect}
-          />
-          <Dropdown.Option
-            value={"option2"}
-            title={"Опция 2"}
-            handleValue={handleSelect}
-          />
-          <Dropdown.Option
-            value={"option3"}
-            title={"Опция 3"}
-            handleValue={handleSelect}
-          />
+          {options.map(({ label, value }) => {
+            return (
+              <Dropdown.Option
+                key={value}
+                value={value}
+                title={label}
+                handleValue={handleSelect}
+              />
+            );
+          })}
         </Dropdown>
       </div>
       <Tooltip

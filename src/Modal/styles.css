@@ -1,4 +1,5 @@
 /* CenterModal */
+
 .centerModal-enter {
   transform: translateY(200%);
 }
@@ -34,6 +35,7 @@
   transform: translateX(-300%);
   transition: all 0.5s;
 }
+
 /* RightModal */
 
 .rightModal-enter {
@@ -88,4 +90,11 @@
 .bottomModal-exit-active {
   transform: translateY(300%);
   transition: all 0.5s;
+}
+
+/* Overlay */
+.overlay {
+  background-color: rgba(0, 0, 0, 0.4);
+  position: absolute;
+  inset: 0;
 }
