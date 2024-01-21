@@ -2,8 +2,8 @@ import { FC, useState } from "react";
 import "./App.css";
 import { Modal } from "./Modal/Modal";
 import { ModalPosition } from "./Modal/types";
+import { Dropdown } from "./Dropdown/Dropdown";
 import { Tooltip, TooltipPosition } from "./Tooltip/Tooltip";
-import { Dropdown, Option } from "./Dropdown/Dropdown";
 
 const ContentComponent3: FC = () => {
   const [isVisibleModalTwo, setIsVisibleModalTwo] = useState<boolean>(false);
@@ -67,14 +67,8 @@ function App() {
   };
   const buttonText = isVisible ? "Close Modal" : "OpenModal";
 
-  const options = [
-    { label: "Опция 1", value: "option1" },
-    { label: "Опция 2", value: "option2" },
-    { label: "Опция 3", value: "option3" },
-  ];
-
-  const handleSelect = (selectedOption: Option) => {
-    console.log(`Выбрана опция: ${selectedOption.label}`);
+  const handleSelect = (selectedValue: string) => {
+    console.log(`Выбрана опция: ${selectedValue}`);
   };
 
   return (
@@ -87,12 +81,27 @@ function App() {
         alignItems: "center",
       }}
     >
-      {/* <div>
-        <div>Drpodown</div>
-        <Dropdown options={options} onSelect={handleSelect} />
-      </div> */}
+      <div>
+        <Dropdown withDivider={true}>
+          <Dropdown.Option
+            value={"option1"}
+            title={"Опция 1"}
+            handleValue={handleSelect}
+          />
+          <Dropdown.Option
+            value={"option2"}
+            title={"Опция 2"}
+            handleValue={handleSelect}
+          />
+          <Dropdown.Option
+            value={"option3"}
+            title={"Опция 3"}
+            handleValue={handleSelect}
+          />
+        </Dropdown>
+      </div>
       <Tooltip
-        position={TooltipPosition.bottom}
+        position={TooltipPosition.top}
         content={<span>Открывает модальное окно</span>}
       >
         <button

@@ -11,10 +11,11 @@ type TooltipProps = {
   children: JSX.Element;
 };
 export const Tooltip: FC<TooltipProps> = ({ position, content, children }) => {
-  const [isVisibleText, setIsVisibleText] = useState(false);
-  const [coordinates, setCoordinate] = useState<null | {
-    x: number;
-    y: number;
+  const [isVisibleText, setIsVisibleText] = useState(true);
+  const [style, setStyle] = useState<null | {
+    left: number;
+    top: number;
+    width: number;
   }>(null);
 
   const ref = useRef<HTMLElement | null>(null);
@@ -25,16 +26,15 @@ export const Tooltip: FC<TooltipProps> = ({ position, content, children }) => {
       return;
     }
 
-    const { top, left } = element.getBoundingClientRect();
-    setCoordinate({ x: top, y: left });
-  }, []);
+    const { top, left, width } = element.getBoundingClientRect();
 
-  let top;
+    setStyle({
+      top: position === TooltipPosition.top ? top - 30 : top + 30,
+      left,
+      width,
+    });
+  }, [position]);
 
-  if (coordinates?.y) {
-    top =
-      position === TooltipPosition.top ? coordinates.y - 100 : coordinates.y;
-  }
   return (
     <>
       {cloneElement(children, {
@@ -57,7 +57,9 @@ export const Tooltip: FC<TooltipProps> = ({ position, content, children }) => {
           <div
             className={styles.tooltip}
             style={{
-              top,
+              top: style?.top ? style.top : undefined,
+              left: style?.left ? style.left : undefined,
+              width: style?.width ? style.width : undefined,
             }}
           >
             {content}
