@@ -6,13 +6,10 @@ class LayerManagerClass {
 
   register(fn: VoidFunction): void {
     this.layers.push(fn);
-    console.log(this.layers);
   }
 
   unregister(fn: VoidFunction): void {
     this.layers = this.layers.filter((el) => el !== fn);
-
-    console.log(this.layers);
   }
 
   callFn() {
