@@ -3,7 +3,6 @@ import style from "./style.module.css";
 export type OptionProps = {
   title: string;
   value?: string;
-  isHighlighted?: boolean;
   handleValue: (selectedValue: string) => void;
   onClick?: VoidFunction;
 };
