@@ -1,0 +1,30 @@
+.selectItemsWrapper-enter {
+  opacity: 0;
+}
+.selectItemsWrapper-enter-active {
+  opacity: 1;
+  transform: translateY(40%);
+  transition: all 0.3s ease-out;
+}
+
+.selectItemsWrapper-enter-done {
+  opacity: 1;
+  transform: translateY(40%);
+  transition: all 0.3s ease-out;
+}
+.selectItemsWrapper-exit {
+  transform: translateY(-20%);
+  transition: all 0.3s ease-out;
+  opacity: 1;
+}
+.selectItemsWrapper-exit-active {
+  opacity: 0;
+}
+
+.selectItemsWrapper {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}

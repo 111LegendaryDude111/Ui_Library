@@ -1,9 +1,10 @@
-import { FC, cloneElement, useEffect, useRef, useState } from "react";
+import { FC, cloneElement, useRef, useState } from "react";
 import styles from "./style.module.css";
 import { createPortal } from "react-dom";
 import { CSSTransition } from "react-transition-group";
 import "./animation.css";
 import { TooltipPosition } from "./types";
+import { useCoordinates } from "../hooks/useCoordinates";
 
 type TooltipProps = {
   position: TooltipPosition;
@@ -11,29 +12,10 @@ type TooltipProps = {
   children: JSX.Element;
 };
 export const Tooltip: FC<TooltipProps> = ({ position, content, children }) => {
-  const [isVisibleText, setIsVisibleText] = useState(true);
-  const [style, setStyle] = useState<null | {
-    left: number;
-    top: number;
-    width: number;
-  }>(null);
-
+  const [isVisibleText, setIsVisibleText] = useState(false);
   const ref = useRef<HTMLElement | null>(null);
 
-  useEffect(() => {
-    const element = ref.current;
-    if (!element) {
-      return;
-    }
-
-    const { top, left, width } = element.getBoundingClientRect();
-
-    setStyle({
-      top: position === TooltipPosition.top ? top - 30 : top + 30,
-      left,
-      width,
-    });
-  }, [position]);
+  const { top, left, width } = useCoordinates(ref.current);
 
   return (
     <>
@@ -57,9 +39,12 @@ export const Tooltip: FC<TooltipProps> = ({ position, content, children }) => {
           <div
             className={styles.tooltip}
             style={{
-              top: style?.top ? style.top : undefined,
-              left: style?.left ? style.left : undefined,
-              width: style?.width ? style.width : undefined,
+              top:
+                position === TooltipPosition.top
+                  ? top && top - 30
+                  : top && top + 30,
+              left,
+              width,
             }}
           >
             {content}

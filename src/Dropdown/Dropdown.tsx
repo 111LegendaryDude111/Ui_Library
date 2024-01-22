@@ -1,7 +1,6 @@
 import React, {
   Children,
   cloneElement,
-  useEffect,
   useReducer,
   useRef,
   useState,
@@ -13,6 +12,7 @@ import styles from "./styles.module.css";
 import { createPortal } from "react-dom";
 import { ChevroneUp } from "./components/ChevroneUp/ChevroneUp";
 import { ChevronDown } from "./components/ChevronDown/ChevronDown";
+import { useCoordinates } from "../hooks/useCoordinates";
 
 type DropdownProps = {
   children: JSX.Element | JSX.Element[];
@@ -29,20 +29,9 @@ const Dropdown: React.FC<DropdownProps> & { Option: React.FC<OptionProps> } = ({
 
   const [selectedTitle, setSelectedTitle] = useState<string | null>(null);
 
-  const [coordinateY, setCoordinate] = useState<null | {
-    top: number;
-    left: number;
-  }>(null);
-
   const ref = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    const element = ref.current;
-    if (!element) return;
-
-    const { top, left } = element.getBoundingClientRect();
-    setCoordinate({ top, left });
-  }, []);
+  const { top, left, width: widthFromHook } = useCoordinates(ref.current);
 
   return (
     <>
@@ -62,9 +51,9 @@ const Dropdown: React.FC<DropdownProps> & { Option: React.FC<OptionProps> } = ({
             <div
               className={styles.wrapperContent}
               style={{
-                top: coordinateY?.top ? coordinateY.top : undefined,
-                left: coordinateY?.left ? coordinateY.left : undefined,
-                width,
+                top,
+                left,
+                width: widthFromHook ?? width,
               }}
             >
               {Children.map(children, (child) => {
