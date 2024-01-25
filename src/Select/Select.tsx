@@ -73,7 +73,7 @@ export const Select: FC<SelectProps> = ({ options }) => {
                 options={options}
               />
             </div>,
-            document.getElementById("select")!,
+            document.body,
             "select"
           )
         }

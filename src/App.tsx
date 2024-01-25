@@ -26,7 +26,7 @@ const ContentComponent3: FC = () => {
       <Modal
         isVisible={isVisibleModalTwo}
         onClose={modalHandlerTwo}
-        modalPosition={ModalPosition.right}
+        modalPosition={ModalPosition.top}
         header={<h1>Header #3</h1>}
         content={<>Content #3</>}
       />
@@ -53,7 +53,7 @@ const ContentComponent: FC = () => {
       <Modal
         isVisible={isVisibleModalTwo}
         onClose={modalHandlerTwo}
-        modalPosition={ModalPosition.left}
+        modalPosition={ModalPosition.bottom}
         header={<h1>Header #2</h1>}
         content={<ContentComponent3 />}
       />
@@ -123,14 +123,17 @@ function App() {
         position={TooltipPosition.top}
         content={<span>Открывает модальное окно</span>}
       >
-        <button
-          onClick={modalHandler}
-          style={{
-            width: "300px",
-          }}
-        >
-          {buttonText}
-        </button>
+        {(props) => {
+          return (
+            <button
+              onClick={modalHandler}
+              style={{ width: "300px" }}
+              {...props}
+            >
+              {buttonText}
+            </button>
+          );
+        }}
       </Tooltip>
       <Modal
         isVisible={isVisible}

@@ -34,10 +34,10 @@ const Dropdown: React.FC<DropdownProps> & { Option: React.FC<OptionProps> } = ({
   const { top, left, width: widthFromHook } = useCoordinates(ref.current);
 
   return (
-    <>
-      <div className={styles.wrapper} style={{ width }} ref={ref}>
+    <div ref={ref}>
+      <div className={styles.wrapper} style={{ width }} onClick={toggle}>
         <span>{selectedTitle ? selectedTitle : "Choose one"}</span>
-        <span onClick={toggle}>{open ? <ChevroneUp /> : <ChevronDown />}</span>
+        <span>{open ? <ChevroneUp /> : <ChevronDown />}</span>
       </div>
       {withDivider && <hr style={{ width: `${parseInt(width) - 100}px` }} />}
       <CSSTransition
@@ -66,12 +66,12 @@ const Dropdown: React.FC<DropdownProps> & { Option: React.FC<OptionProps> } = ({
                 });
               })}
             </div>,
-            document.getElementById("dropdown")!,
+            document.body,
             "dropdown"
           )
         }
       </CSSTransition>
-    </>
+    </div>
   );
 };
 

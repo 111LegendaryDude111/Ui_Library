@@ -1,7 +1,7 @@
 import { ModalContent } from "./components/ModalContents";
 import { FC, useEffect } from "react";
 import { ModalPosition } from "./types";
-import "./styles.css";
+import "./animation.css";
 import { useEvent } from "../hooks/useEvent";
 import { CSSTransition } from "react-transition-group";
 import { createPortal } from "react-dom";
@@ -28,10 +28,10 @@ export const Modal: FC<ModalProps> = ({
     if (!isVisible) {
       return;
     }
-    LayerManager.register(close);
+    const unregister = LayerManager.register(close);
 
     return () => {
-      LayerManager.unregister(close);
+      unregister();
     };
   }, [close, isVisible]);
 
@@ -47,26 +47,26 @@ export const Modal: FC<ModalProps> = ({
       : "bottomModal";
 
   return (
-    <>
-      {isVisible && <div className="overlay"></div>}
-      <CSSTransition
-        in={isVisible}
-        unmountOnExit
-        timeout={300}
-        classNames={classNames}
-      >
-        {() =>
-          createPortal(
-            <ModalContent
-              modalPosition={modalPosition}
-              header={header}
-              content={content}
-            />,
-            document.getElementById("modal")!,
-            "modal"
-          )
-        }
-      </CSSTransition>
-    </>
+    <CSSTransition
+      in={isVisible}
+      unmountOnExit
+      timeout={300}
+      classNames={classNames}
+    >
+      {() =>
+        createPortal(
+          <ModalContent
+            onClose={() => {
+              LayerManager.closeTopLayer();
+            }}
+            modalPosition={modalPosition}
+            header={header}
+            content={content}
+          />,
+          document.body,
+          "modal"
+        )
+      }
+    </CSSTransition>
   );
 };

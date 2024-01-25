@@ -1,0 +1,237 @@
+/* CenterModal */
+
+/* Overlay animation */
+.centerModal-enter .overlay {
+  transform: translateY(0);
+  opacity: 1;
+}
+.centerModal-enter-active .overlay {
+  transform: translateY(0);
+  opacity: 1;
+}
+.centerModal-enter-done .overlay {
+  transform: translateY(0);
+  opacity: 1;
+}
+.centerModal-exit .overlay {
+  transform: translateY(0);
+  opacity: 1;
+}
+.centerModal-exit-active .overlay {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Content animation */
+
+.centerModal-enter-active .modalContent {
+  transform: translateY(200%);
+  opacity: 1;
+}
+.centerModal-enter-done .modalContent {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.5s;
+}
+.centerModal-exit .modalContent {
+  opacity: 1;
+  transform: translateY(0);
+}
+.centerModal-exit-active .modalContent {
+  transform: translateY(300%);
+  transition: all 0.5s;
+}
+
+/* LeftModal */
+
+/* Overlay animation */
+
+.leftModal-enter .overlay {
+  transform: translateY(0);
+  opacity: 1;
+}
+.leftModal-enter-active .overlay {
+  transform: translateY(0);
+  opacity: 1;
+}
+.leftModal-enter-done .overlay {
+  transform: translateY(0);
+  opacity: 1;
+}
+.leftModal-exit .overlay {
+  transform: translateY(0);
+  opacity: 1;
+}
+.leftModal-exit-active .overlay {
+  transform: translateY(0);
+  opacity: 1;
+}
+/* Content animation */
+
+.leftModal-enter .modalContent {
+  transform: translateX(-200%);
+}
+.leftModal-enter-active .modalContent {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all 0.5s;
+}
+.leftModal-exit .modalContent {
+  opacity: 1;
+  transform: translateX(0);
+}
+.leftModal-exit-active .modalContent {
+  transform: translateX(-300%);
+  transition: all 0.5s;
+}
+
+/* RightModal */
+
+/* Overlay animation */
+
+.rightModal-enter .overlay {
+  transform: translateY(0);
+  opacity: 1;
+}
+.rightModal-enter-active .overlay {
+  transform: translateY(0);
+  opacity: 1;
+}
+.rightModal-enter-done .overlay {
+  transform: translateY(0);
+  opacity: 1;
+}
+.rightModal-exit .overlay {
+  transform: translateY(0);
+  opacity: 1;
+}
+.rightModal-exit-active .overlay {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Content animation */
+
+.rightModal-enter .modalContent {
+  transform: translateX(200%);
+}
+.rightModal-enter-active .modalContent {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all 0.5s;
+}
+.rightModal-enter-done .modalContent {
+  transform: translateY(0);
+  opacity: 1;
+}
+.rightModal-exit .modalContent {
+  opacity: 1;
+  transform: translateX(0);
+}
+.rightModal-exit-active .modalContent {
+  transform: translateX(300%);
+  transition: all 0.5s;
+}
+
+/* TopModal */
+
+/* Overlay animation */
+
+.topModal-enter .overlay {
+  transform: translateY(0);
+  opacity: 1;
+}
+.topModal-enter-active .overlay {
+  transform: translateY(0);
+  opacity: 1;
+}
+.topModal-enter-done .overlay {
+  transform: translateY(0);
+  opacity: 1;
+}
+.topModal-exit .overlay {
+  transform: translateY(0);
+  opacity: 1;
+}
+.topModal-exit-active .overlay {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Content animation */
+
+.topModal-enter .modalContent {
+  transform: translateY(-200%);
+}
+.topModal-enter-active .modalContent {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.5s;
+}
+.topModal-enter-done .overlay .modalContent {
+  transform: translateY(0);
+  opacity: 1;
+}
+.topModal-exit .modalContent {
+  opacity: 1;
+  transform: translateY(0);
+}
+.topModal-exit-active .modalContent {
+  transform: translateY(-300%);
+  transition: all 0.5s;
+}
+
+/* BottomModal */
+
+/* Overlay animation */
+
+.bottomModal-enter .overlay {
+  transform: translateY(0);
+  opacity: 1;
+}
+.bottomModal-enter-active .overlay {
+  transform: translateY(0);
+  opacity: 1;
+}
+.bottomModal-enter-done .overlay {
+  transform: translateY(0);
+  opacity: 1;
+}
+.bottomModal-exit .overlay {
+  transform: translateY(0);
+  opacity: 1;
+}
+.bottomModal-exit-active .overlay {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Content animation */
+
+.bottomModal-enter .modalContent {
+  transform: translateY(200%);
+}
+.bottomModal-enter-active .modalContent {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.5s;
+}
+.bottomModal-enter-done .overlay .modalContent {
+  transform: translateY(0);
+  opacity: 1;
+}
+.bottomModal-exit .modalContent {
+  opacity: 1;
+  transform: translateY(0);
+}
+.bottomModal-exit-active .modalContent {
+  transform: translateY(300%);
+  transition: all 0.5s;
+}
+
+/* Overlay */
+.overlay {
+  background-color: rgba(0, 0, 0, 0.4);
+  position: absolute;
+  inset: 0;
+}
