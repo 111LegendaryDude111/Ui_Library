@@ -6,7 +6,7 @@ type Coordinates = {
   width: number;
 };
 
-export const useCoordinates = (refElement: HTMLElement | null) => {
+export const useCoordinates = (refElement: Element | null) => {
   const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
 
   useEffect(() => {

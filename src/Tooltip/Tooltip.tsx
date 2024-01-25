@@ -1,37 +1,38 @@
-import { FC, cloneElement, useRef, useState } from "react";
+import { FC, useState } from "react";
 import styles from "./style.module.css";
 import { createPortal } from "react-dom";
 import { CSSTransition } from "react-transition-group";
-import "./animation.css";
 import { TooltipPosition } from "./types";
 import { useCoordinates } from "../hooks/useCoordinates";
+import "./animation.css";
 
 type TooltipProps = {
   position: TooltipPosition;
   content: string | JSX.Element;
-  children: JSX.Element;
+  children: <T>(props: T) => JSX.Element;
 };
-export const Tooltip: FC<TooltipProps> = ({ position, content, children }) => {
-  const [isVisibleText, setIsVisibleText] = useState(false);
-  const ref = useRef<HTMLElement | null>(null);
+export const Tooltip: FC<TooltipProps> = ({
+  position,
+  content,
+  children,
+  ...props
+}) => {
+  const [currentElement, setCurrentElement] = useState<Element | null>(null);
+  const { top, left, width } = useCoordinates(currentElement);
 
-  const { top, left, width } = useCoordinates(ref.current);
+  const onMouseEnter = (e: MouseEvent) => {
+    setCurrentElement(e.currentTarget as Element);
+  };
 
+  const onMouseLeave = () => {
+    setCurrentElement(null);
+  };
   return (
     <>
-      {cloneElement(children, {
-        ...children.props,
-        onMouseEnter: () => {
-          setIsVisibleText(true);
-        },
-        onMouseLeave: () => {
-          setIsVisibleText(false);
-        },
-        ref: ref,
-      })}
+      {children({ onMouseEnter, onMouseLeave, ...props })}
       {createPortal(
         <CSSTransition
-          in={isVisibleText}
+          in={!!currentElement}
           unmountOnExit
           timeout={300}
           classNames={"tooltipContent"}
@@ -50,7 +51,7 @@ export const Tooltip: FC<TooltipProps> = ({ position, content, children }) => {
             {content}
           </div>
         </CSSTransition>,
-        document.getElementById("tooltip")!,
+        document.body,
         "tooltip"
       )}
     </>
