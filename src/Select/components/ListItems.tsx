@@ -1,33 +1,101 @@
-import { FC } from "react";
+import { FC, useLayoutEffect, useRef } from "react";
 import { Option } from "../types";
 import { Item } from "./Item";
+import { MultiplySelect } from "./MultiplySelect";
 
-type ListItemsProps = {
-  inputValue?: string;
-  filterArr: Option[];
+export interface ListItemsProps {
+  value?: string;
   options: Option[];
-  selectValue: (val: string) => void;
-};
+  onChange: (val: string) => void;
+  renderOptions?: (option: Option) => JSX.Element;
+  multiply?: boolean;
+}
 
 export const ListItems: FC<ListItemsProps> = ({
-  inputValue,
-  filterArr,
+  value,
   options,
-  selectValue,
+  onChange,
+  renderOptions,
+  multiply,
 }) => {
-  return inputValue
-    ? filterArr.map(({ title, value }) => {
-        return (
-          <Item key={title + value} value={value} selectValue={selectValue}>
-            {title}
-          </Item>
-        );
-      })
-    : options.map(({ title, value }) => {
-        return (
-          <Item key={title + value} value={value} selectValue={selectValue}>
-            {title}
-          </Item>
-        );
-      });
+  const isActive = useRef<string | undefined>(undefined);
+
+  useLayoutEffect(() => {
+    return () => {
+      isActive.current = undefined;
+    };
+  }, []);
+
+  if (renderOptions) {
+    return options.map(renderOptions);
+  }
+
+  if (multiply) {
+    return (
+      <MultiplySelect
+        value={value}
+        isActive={isActive}
+        options={options}
+        onChange={onChange}
+      />
+    );
+  }
+
+  const filterArr = options.filter((el) => {
+    if (!value) {
+      return true;
+    }
+
+    if (el.title.includes(value) || el.value.includes(value)) {
+      return true;
+    }
+  });
+
+  return filterArr.map(({ id, title, value }) => {
+    return (
+      <Item
+        key={title + value}
+        value={value}
+        onChange={() => {
+          isActive.current = id;
+          onChange(title);
+        }}
+        isActive={isActive.current === id}
+      >
+        {title}
+      </Item>
+    );
+  });
+
+  // return value
+  //   ? filterArr.map(({ id, title, value }) => {
+  //       return (
+  //         <Item
+  //           key={title + value}
+  //           value={value}
+  //           onChange={() => {
+  //             isActive.current = id;
+  //             onChange(title);
+  //           }}
+  //           isActive={isActive.current === id}
+  //         >
+  //           {title}
+  //         </Item>
+  //       );
+  //     })
+  //   : options.map(({ id, title, value }) => {
+  //       return (
+  //         <Item
+  //           key={title + value}
+  //           value={value}
+  //           onChange={() => {
+  //             isActive.current = id;
+  //             onChange(title);
+  //           }}
+  //           isActive={isActive.current === id}
+  //         >
+  //           {title}
+  //         </Item>
+  //       );
+  //     });
 };
