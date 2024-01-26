@@ -1,33 +1,29 @@
-import React, {
-  Children,
-  cloneElement,
-  useReducer,
-  useRef,
-  useState,
-} from "react";
+import React, { Children, cloneElement, useReducer, useRef } from "react";
 import { Option, OptionProps } from "./components/Option/Option";
 import { CSSTransition } from "react-transition-group";
 import "./animation.css";
 import styles from "./styles.module.css";
 import { createPortal } from "react-dom";
-import { ChevroneUp } from "./components/ChevroneUp/ChevroneUp";
-import { ChevronDown } from "./components/ChevronDown/ChevronDown";
+import { ChevroneUp } from "../share/ChevroneUp/ChevroneUp";
+import { ChevronDown } from "../share/ChevronDown/ChevronDown";
 import { useCoordinates } from "../hooks/useCoordinates";
 
 type DropdownProps = {
   children: JSX.Element | JSX.Element[];
   withDivider?: boolean;
   width?: string;
+  onChange: ({ title, value }: { title: string; value: string }) => void;
+  value?: string;
 };
 
 const Dropdown: React.FC<DropdownProps> & { Option: React.FC<OptionProps> } = ({
   children,
   withDivider,
   width = "400px",
+  onChange,
+  value,
 }) => {
   const [open, toggle] = useReducer((prev) => !prev, false);
-
-  const [selectedTitle, setSelectedTitle] = useState<string | null>(null);
 
   const ref = useRef<HTMLDivElement | null>(null);
 
@@ -36,7 +32,7 @@ const Dropdown: React.FC<DropdownProps> & { Option: React.FC<OptionProps> } = ({
   return (
     <div ref={ref}>
       <div className={styles.wrapper} style={{ width }} onClick={toggle}>
-        <span>{selectedTitle ? selectedTitle : "Choose one"}</span>
+        <span>{value ? value : "Choose one"}</span>
         <span>{open ? <ChevroneUp /> : <ChevronDown />}</span>
       </div>
       {withDivider && <hr style={{ width: `${parseInt(width) - 100}px` }} />}
@@ -59,8 +55,9 @@ const Dropdown: React.FC<DropdownProps> & { Option: React.FC<OptionProps> } = ({
               {Children.map(children, (child) => {
                 return cloneElement(child, {
                   onClick: () => {
-                    child.props.handleValue(child.props.value);
-                    setSelectedTitle(child.props.title);
+                    const { title, value } = child.props;
+
+                    onChange({ title, value });
                     toggle();
                   },
                 });

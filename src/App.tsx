@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import "./App.css";
 import { Modal } from "./Modal/Modal";
 import { ModalPosition } from "./Modal/types";
@@ -61,6 +61,8 @@ const ContentComponent: FC = () => {
   );
 };
 
+type DropdownValueType = { title: string; value: string };
+
 function App() {
   const [isVisible, setIsVisible] = useState(false);
   const modalHandler = () => {
@@ -68,8 +70,14 @@ function App() {
   };
   const buttonText = isVisible ? "Close Modal" : "OpenModal";
 
-  const handleSelect = (selectedValue: string) => {
-    console.log(`Выбрана опция: ${selectedValue}`);
+  const [value, setValue] = useState<string>();
+
+  //generic ??
+  const onChangeDropdown = ({ title, value }: DropdownValueType) => {
+    console.log(`title: ${title}`);
+    console.log(`value: ${value}`);
+
+    setValue(title);
   };
 
   const options = [
@@ -84,6 +92,34 @@ function App() {
     { label: "option9", value: "Опция 9" },
   ];
 
+  /*
+  <Select 
+    value={}
+    onChange={}
+    onSearchChange={}
+    multiple={true}
+    options={options}
+    renderOption={option => <div>{option.title}</div>}
+    loading={false}
+/>
+*/
+
+  const [selectValue, setSelectValue] = useState<string>();
+
+  const onChangeSelect = (props: string) => {
+    setSelectValue(props);
+  };
+
+  const selectOptions = useMemo(() => {
+    return options.map((el) => {
+      return {
+        id: self.crypto.randomUUID(),
+        title: el.label,
+        value: el.value,
+      };
+    });
+  }, []);
+
   return (
     <div
       style={{
@@ -95,27 +131,30 @@ function App() {
       }}
     >
       <div>
-        <h4>Select</h4>
+        <span style={{ fontSize: "20px", fontWeight: 600 }}>Select</span>
         <Select
-          options={options.map((el) => {
-            return {
-              title: el.label,
-              value: el.value,
-            };
-          })}
+          multiply={false}
+          value={selectValue}
+          renderOptions={(option) => (
+            <div onClick={() => onChangeSelect(option.title)}>
+              {option.title}
+            </div>
+          )}
+          onChange={onChangeSelect}
+          options={selectOptions}
         />
       </div>
       <div>
-        <Dropdown withDivider={true}>
-          {options.map(({ label, value }) => {
-            return (
-              <Dropdown.Option
-                key={value}
-                value={value}
-                title={label}
-                handleValue={handleSelect}
-              />
-            );
+        <Dropdown withDivider={true} value={value} onChange={onChangeDropdown}>
+          {options.map(({ label, value }, i) => {
+            if (i % 2 === 0) {
+              return (
+                <Dropdown.Option key={value} value={value} title={label}>
+                  <span>{`Content : ${label}`} </span>
+                </Dropdown.Option>
+              );
+            }
+            return <Dropdown.Option key={value} value={value} title={label} />;
           })}
         </Dropdown>
       </div>
