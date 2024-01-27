@@ -1,14 +1,18 @@
-import { FC, useLayoutEffect, useRef } from "react";
-import { Option } from "../types";
+import { FC } from "react";
+import { SelectOption } from "../types";
 import { Item } from "./Item";
 import { MultiplySelect } from "./MultiplySelect";
+import { Spinner } from "../../share/Spinner/Spinner";
 
 export interface ListItemsProps {
   value?: string;
-  options: Option[];
+  options: SelectOption[];
   onChange: (val: string) => void;
-  renderOptions?: (option: Option) => JSX.Element;
+  searchValue: string;
+  renderOptions?: (option: SelectOption) => JSX.Element;
   multiply?: boolean;
+  loading?: boolean;
+  isActive: React.MutableRefObject<string | undefined>;
 }
 
 export const ListItems: FC<ListItemsProps> = ({
@@ -17,14 +21,13 @@ export const ListItems: FC<ListItemsProps> = ({
   onChange,
   renderOptions,
   multiply,
+  loading,
+  searchValue,
+  isActive,
 }) => {
-  const isActive = useRef<string | undefined>(undefined);
-
-  useLayoutEffect(() => {
-    return () => {
-      isActive.current = undefined;
-    };
-  }, []);
+  if (loading) {
+    return <Spinner />;
+  }
 
   if (renderOptions) {
     return options.map(renderOptions);
@@ -37,16 +40,13 @@ export const ListItems: FC<ListItemsProps> = ({
         isActive={isActive}
         options={options}
         onChange={onChange}
+        searchValue={""}
       />
     );
   }
 
   const filterArr = options.filter((el) => {
-    if (!value) {
-      return true;
-    }
-
-    if (el.title.includes(value) || el.value.includes(value)) {
+    if (el.title.toLowerCase().includes(searchValue.toLowerCase())) {
       return true;
     }
   });
@@ -66,36 +66,4 @@ export const ListItems: FC<ListItemsProps> = ({
       </Item>
     );
   });
-
-  // return value
-  //   ? filterArr.map(({ id, title, value }) => {
-  //       return (
-  //         <Item
-  //           key={title + value}
-  //           value={value}
-  //           onChange={() => {
-  //             isActive.current = id;
-  //             onChange(title);
-  //           }}
-  //           isActive={isActive.current === id}
-  //         >
-  //           {title}
-  //         </Item>
-  //       );
-  //     })
-  //   : options.map(({ id, title, value }) => {
-  //       return (
-  //         <Item
-  //           key={title + value}
-  //           value={value}
-  //           onChange={() => {
-  //             isActive.current = id;
-  //             onChange(title);
-  //           }}
-  //           isActive={isActive.current === id}
-  //         >
-  //           {title}
-  //         </Item>
-  //       );
-  //     });
 };

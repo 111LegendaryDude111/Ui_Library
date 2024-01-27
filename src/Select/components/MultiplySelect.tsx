@@ -1,7 +1,6 @@
-import { FC } from "react";
+import { FC, useEffect, useRef } from "react";
 import { Item } from "./Item";
 import { ListItemsProps } from "./ListItems";
-import { useLastValue } from "../../hooks/useLastValue";
 
 interface MultiplySelectProps extends ListItemsProps {
   isActive: React.MutableRefObject<string | undefined>;
@@ -12,29 +11,30 @@ export const MultiplySelect: FC<MultiplySelectProps> = ({
   options,
   isActive,
   onChange,
+  // searchValue,
 }) => {
-  const lastValue = useLastValue<string>(value);
+  const allTittles = useRef<string[]>([]);
 
-  const filterArr = options.filter((el) => {
-    if (!value || !lastValue.current) {
-      return true;
+  useEffect(() => {
+    if (value) {
+      allTittles.current.push(value);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-    const lastWord = lastValue.current.split(",").pop();
+  // const filterArr = options.filter((el) => {
+  //   if (!value || !lastValue.current) {
+  //     return true;
+  //   }
 
-    // console.log("value", value);
-    // console.log("lastWord", lastWord);
-    // console.log(
-    //   "el.title.includes(String(lastWord))",
-    //   el.title.includes(String(lastWord))
-    // );
+  //   const lastWord = value.split(",").pop();
 
-    if (el.title.includes(String(lastWord)) && !!lastWord) {
-      return true;
-    }
+  //   if (el.title.includes(String(lastWord)) && !!lastWord) {
+  //     return true;
+  //   }
 
-    return false;
-  });
+  //   return false;
+  // });
 
   return options.map(({ id, title, value }) => {
     return (
@@ -48,16 +48,9 @@ export const MultiplySelect: FC<MultiplySelectProps> = ({
             isActive.current = id;
           }
 
-          console.log(lastValue.current);
-          if (lastValue.current) {
-            lastValue.current = [...lastValue.current.split(","), title + ","]
-              .filter(Boolean)
-              .join(",");
-          } else {
-            lastValue.current = `${title},`;
-          }
+          allTittles.current.push(title);
 
-          onChange(lastValue.current);
+          onChange(allTittles.current.toString());
         }}
         isActive={!!isActive.current?.includes(id)}
       >

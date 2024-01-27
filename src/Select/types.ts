@@ -1,4 +1,4 @@
-export type Option = {
+export type SelectOption = {
   id: string;
   title: string;
   value: string;

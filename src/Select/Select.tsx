@@ -1,5 +1,5 @@
 import { FC, useRef, useState } from "react";
-import { Option } from "./types";
+import { SelectOption } from "./types";
 import { ListItems } from "./components/ListItems";
 import { useCoordinates } from "../hooks/useCoordinates";
 import "./animation.css";
@@ -11,11 +11,12 @@ import { ChevroneUp } from "../share/ChevroneUp/ChevroneUp";
 import { ChevronDown } from "../share/ChevronDown/ChevronDown";
 
 type SelectProps = {
-  options: Option[];
+  options: SelectOption[];
   onChange: (arg: string) => void;
   value?: string;
   multiply?: boolean;
-  renderOptions?: (option: Option) => JSX.Element;
+  renderOptions?: (option: SelectOption) => JSX.Element;
+  loading?: boolean;
 };
 
 export const Select: FC<SelectProps> = ({
@@ -24,6 +25,7 @@ export const Select: FC<SelectProps> = ({
   value,
   multiply = false,
   renderOptions,
+  loading,
 }) => {
   const [openList, setOpenList] = useState(false);
 
@@ -31,20 +33,26 @@ export const Select: FC<SelectProps> = ({
     onChange("");
     setOpenList(false);
   };
+
   const ref = useRef<HTMLInputElement | null>(null);
 
   const { top, left, width } = useCoordinates(ref.current);
+
+  const [searchValue, setSearchValue] = useState<string>("");
+
+  const isActive = useRef<string | undefined>(undefined);
+
   return (
     <>
       <div className={styles.inputWrapper}>
         <input
           ref={ref}
           style={{ width: "300px" }}
-          value={value}
+          value={value ? value : searchValue}
           placeholder="Type ..."
           onChange={(e) => {
             const target = e.target;
-            onChange(target.value);
+            setSearchValue(target.value);
           }}
           onClick={() => setOpenList(true)}
         />
@@ -66,6 +74,7 @@ export const Select: FC<SelectProps> = ({
               <ListItems
                 onChange={(val: string) => {
                   onChange(val);
+                  setSearchValue("");
 
                   if (!multiply) {
                     setOpenList(false);
@@ -75,6 +84,9 @@ export const Select: FC<SelectProps> = ({
                 options={options}
                 renderOptions={renderOptions}
                 multiply={multiply}
+                loading={loading}
+                searchValue={searchValue}
+                isActive={isActive}
               />
             </div>,
             document.body,

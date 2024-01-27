@@ -1,10 +1,11 @@
-import { FC, useMemo, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import "./App.css";
 import { Modal } from "./Modal/Modal";
 import { ModalPosition } from "./Modal/types";
 import { Dropdown } from "./Dropdown/Dropdown";
 import { Tooltip, TooltipPosition } from "./Tooltip/Tooltip";
 import { Select } from "./Select/Select";
+import { SelectOption } from "./Select/types";
 
 const ContentComponent3: FC = () => {
   const [isVisibleModalTwo, setIsVisibleModalTwo] = useState<boolean>(false);
@@ -118,6 +119,33 @@ function App() {
         value: el.value,
       };
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const [selectOptionsFromServer, setSelectOptionsFromServer] = useState<
+    SelectOption[] | null
+  >(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setIsLoading(true);
+    fetch("https://jsonplaceholder.typicode.com/users")
+      .then((res) => res.json())
+      .then((data) => {
+        setTimeout(() => {
+          setIsLoading(false);
+
+          setSelectOptionsFromServer(
+            data.map((el: { id: string; name: string; phone: string }) => {
+              return {
+                id: String(el.id),
+                title: el.name,
+                value: el.phone,
+              };
+            })
+          );
+        }, 2_000);
+      });
   }, []);
 
   return (
@@ -133,15 +161,16 @@ function App() {
       <div>
         <span style={{ fontSize: "20px", fontWeight: 600 }}>Select</span>
         <Select
-          multiply={false}
+          multiply={true}
           value={selectValue}
-          renderOptions={(option) => (
-            <div onClick={() => onChangeSelect(option.title)}>
-              {option.title}
-            </div>
-          )}
           onChange={onChangeSelect}
-          options={selectOptions}
+          options={selectOptionsFromServer ?? selectOptions}
+          loading={isLoading}
+          // renderOptions={(option) => (
+          //   <div onClick={() => onChangeSelect(option.title)}>
+          //     {option.title}
+          //   </div>
+          // )}
         />
       </div>
       <div>
