@@ -55,9 +55,9 @@ const Dropdown: React.FC<DropdownProps> & { Option: React.FC<OptionProps> } = ({
               {Children.map(children, (child) => {
                 return cloneElement(child, {
                   onClick: () => {
-                    const { title, value } = child.props;
+                    const { label, value } = child.props;
 
-                    onChange({ title, value });
+                    onChange({ title: label, value });
                     toggle();
                   },
                 });

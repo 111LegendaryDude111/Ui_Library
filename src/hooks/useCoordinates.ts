@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 
 type Coordinates = {
   top: number;
@@ -9,7 +9,7 @@ type Coordinates = {
 export const useCoordinates = (refElement: Element | null) => {
   const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!refElement) return;
 
     const { top, left, width } = refElement.getBoundingClientRect();

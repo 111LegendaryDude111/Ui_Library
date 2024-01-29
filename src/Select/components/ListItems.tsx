@@ -1,30 +1,35 @@
-import { FC } from "react";
-import { SelectOption } from "../types";
+import { BaseSelectOption } from "../types";
 import { Item } from "./Item";
 import { MultiplySelect } from "./MultiplySelect";
 import { Spinner } from "../../share/Spinner/Spinner";
 
-export interface ListItemsProps {
-  value?: string;
-  options: SelectOption[];
-  onChange: (val: string) => void;
-  searchValue: string;
-  renderOptions?: (option: SelectOption) => JSX.Element;
-  multiply?: boolean;
+export interface ListItemsProps<
+  Option extends BaseSelectOption,
+  Multiple extends boolean = false
+> {
+  value?: Multiple extends true ? Option[] : Option;
+  options: Option[];
+  onChange: (
+    selectedOption?: Multiple extends true ? Option[] : Option
+  ) => void;
+  renderOptions?: (option: Option) => JSX.Element;
+  multiple: Multiple;
   loading?: boolean;
-  isActive: React.MutableRefObject<string | undefined>;
+  searchValue: string;
 }
 
-export const ListItems: FC<ListItemsProps> = ({
+export const ListItems = <
+  Option extends BaseSelectOption,
+  Multiple extends boolean
+>({
   value,
   options,
   onChange,
   renderOptions,
-  multiply,
+  multiple,
   loading,
   searchValue,
-  isActive,
-}) => {
+}: ListItemsProps<Option, Multiple>) => {
   if (loading) {
     return <Spinner />;
   }
@@ -33,14 +38,13 @@ export const ListItems: FC<ListItemsProps> = ({
     return options.map(renderOptions);
   }
 
-  if (multiply) {
+  if (multiple && value) {
     return (
       <MultiplySelect
-        value={value}
-        isActive={isActive}
+        value={value as Option[]}
         options={options}
-        onChange={onChange}
-        searchValue={""}
+        onChange={onChange as (selectedOption: Option[]) => void}
+        searchValue={searchValue}
       />
     );
   }
@@ -51,16 +55,23 @@ export const ListItems: FC<ListItemsProps> = ({
     }
   });
 
-  return filterArr.map(({ id, title, value }) => {
+  return filterArr.map((el) => {
+    const { id, title } = el as Option;
+    const isActive = Array.isArray(value)
+      ? value.some((el) => el.id === id)
+      : value?.id === id;
+
     return (
       <Item
-        key={title + value}
-        value={value}
+        key={id + "" + value}
         onChange={() => {
-          isActive.current = id;
-          onChange(title);
+          if (isActive) {
+            onChange(undefined);
+          } else {
+            onChange(el as Multiple extends true ? Option[] : Option);
+          }
         }}
-        isActive={isActive.current === id}
+        isActive={isActive}
       >
         {title}
       </Item>
