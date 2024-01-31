@@ -5,7 +5,8 @@ import { ModalPosition } from "./Modal/types";
 import { Dropdown } from "./Dropdown/Dropdown";
 import { Tooltip, TooltipPosition } from "./Tooltip/Tooltip";
 import { Select } from "./Select/Select";
-import { SelectOption } from "./Select/types";
+// import { Item } from "./Select/components/Item";
+import { BaseSelectOption } from "./Select/types";
 
 const ContentComponent3: FC = () => {
   const [isVisibleModalTwo, setIsVisibleModalTwo] = useState<boolean>(false);
@@ -64,6 +65,9 @@ const ContentComponent: FC = () => {
 
 type DropdownValueType = { title: string; value: string };
 
+interface SelecetEntity extends BaseSelectOption {
+  value: string | Array<unknown> | number;
+}
 function App() {
   const [isVisible, setIsVisible] = useState(false);
   const modalHandler = () => {
@@ -73,7 +77,6 @@ function App() {
 
   const [value, setValue] = useState<string>();
 
-  //generic ??
   const onChangeDropdown = ({ title, value }: DropdownValueType) => {
     console.log(`title: ${title}`);
     console.log(`value: ${value}`);
@@ -105,13 +108,13 @@ function App() {
 />
 */
 
-  const [selectValue, setSelectValue] = useState<string>();
+  const [selectValue, setSelectValue] = useState<SelecetEntity[] | undefined>();
 
-  const onChangeSelect = (props: string) => {
-    setSelectValue(props);
+  const onChangeSelect = (selectedOption: SelecetEntity[] | undefined) => {
+    setSelectValue(selectedOption);
   };
 
-  const selectOptions = useMemo(() => {
+  const selectOptions: SelecetEntity[] = useMemo(() => {
     return options.map((el) => {
       return {
         id: self.crypto.randomUUID(),
@@ -119,12 +122,12 @@ function App() {
         value: el.value,
       };
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [selectOptionsFromServer, setSelectOptionsFromServer] = useState<
-    SelectOption[] | null
-  >(null);
+    SelecetEntity[] | undefined
+  >(undefined);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -161,16 +164,22 @@ function App() {
       <div>
         <span style={{ fontSize: "20px", fontWeight: 600 }}>Select</span>
         <Select
-          multiply={true}
           value={selectValue}
+          multiple={true}
           onChange={onChangeSelect}
           options={selectOptionsFromServer ?? selectOptions}
           loading={isLoading}
-          // renderOptions={(option) => (
-          //   <div onClick={() => onChangeSelect(option.title)}>
-          //     {option.title}
-          //   </div>
-          // )}
+          // renderOptions={(option) => {
+          //   const isActive = selectValue
+          //     ? selectValue.map((el) => el.id).includes(option.id)
+          //     : false;
+
+          //   return (
+          //     <Item onChange={() => onChangeSelect(option)} isActive={isActive}>
+          //       {option.title}
+          //     </Item>
+          //   );
+          // }}
         />
       </div>
       <div>
@@ -178,12 +187,16 @@ function App() {
           {options.map(({ label, value }, i) => {
             if (i % 2 === 0) {
               return (
-                <Dropdown.Option key={value} value={value} title={label}>
+                <Dropdown.Option key={value} value={value} label={label}>
                   <span>{`Content : ${label}`} </span>
                 </Dropdown.Option>
               );
             }
-            return <Dropdown.Option key={value} value={value} title={label} />;
+            return (
+              <Dropdown.Option key={value} value={value} label={label}>
+                {label}
+              </Dropdown.Option>
+            );
           })}
         </Dropdown>
       </div>

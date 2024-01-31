@@ -1,5 +1,5 @@
-import { FC, useRef, useState } from "react";
-import { SelectOption } from "./types";
+import { useRef, useState } from "react";
+import { BaseSelectOption, SelectProps } from "./types";
 import { ListItems } from "./components/ListItems";
 import { useCoordinates } from "../hooks/useCoordinates";
 import "./animation.css";
@@ -9,28 +9,33 @@ import { IconCross } from "./components/Cross";
 import styles from "./styles.module.css";
 import { ChevroneUp } from "../share/ChevroneUp/ChevroneUp";
 import { ChevronDown } from "../share/ChevronDown/ChevronDown";
+import { useInputSearchProps } from "./hooks/useInputSerchProps";
 
-type SelectProps = {
-  options: SelectOption[];
-  onChange: (arg: string) => void;
-  value?: string;
-  multiply?: boolean;
-  renderOptions?: (option: SelectOption) => JSX.Element;
-  loading?: boolean;
-};
-
-export const Select: FC<SelectProps> = ({
-  options,
-  onChange,
-  value,
-  multiply = false,
-  renderOptions,
-  loading,
-}) => {
+export const Select = <
+  Option extends BaseSelectOption,
+  Multiple extends boolean = false
+>(
+  props: SelectProps<Option, Multiple>
+) => {
+  const {
+    value,
+    options,
+    onChange,
+    multiple = false,
+    renderOptions,
+    loading,
+  } = props;
   const [openList, setOpenList] = useState(false);
 
   const clearInput = () => {
-    onChange("");
+    if (multiple) {
+      onChange([] as unknown as Multiple extends true ? Option[] : Option);
+      setIsOpenSearchInput(false);
+      setSearchValue("");
+    } else {
+      onChange(undefined);
+    }
+
     setOpenList(false);
   };
 
@@ -40,27 +45,55 @@ export const Select: FC<SelectProps> = ({
 
   const [searchValue, setSearchValue] = useState<string>("");
 
-  const isActive = useRef<string | undefined>(undefined);
+  const inputValue = Array.isArray(value)
+    ? value.map((el) => el.title).toString()
+    : value
+    ? value.title
+    : "";
+
+  const { isOpenSearchInput, searInputRef, setIsOpenSearchInput } =
+    useInputSearchProps({
+      multiple,
+      setSearchValue,
+      openList,
+      loading,
+    });
 
   return (
     <>
       <div className={styles.inputWrapper}>
-        <input
-          ref={ref}
-          style={{ width: "300px" }}
-          value={value ? value : searchValue}
-          placeholder="Type ..."
-          onChange={(e) => {
-            const target = e.target;
-            setSearchValue(target.value);
-          }}
-          onClick={() => setOpenList(true)}
-        />
-        <span onClick={() => setOpenList((prev) => !prev)}>
-          {openList ? <ChevroneUp /> : <ChevronDown />}
-        </span>
+        {isOpenSearchInput && openList && (
+          <input
+            ref={searInputRef}
+            style={{ width: "200px" }}
+            value={searchValue}
+            placeholder="Search..."
+            onChange={(event) => setSearchValue(event.currentTarget.value)}
+          />
+        )}
+        <div className={styles.mainInputWrapper}>
+          <input
+            ref={ref}
+            style={{ width: "300px" }}
+            value={inputValue}
+            placeholder="Type ..."
+            onChange={(e) => {
+              if (multiple) {
+                searInputRef.current?.focus();
+                return;
+              }
 
-        <IconCross clearInput={clearInput} />
+              const target = e.target;
+              setSearchValue(target.value);
+            }}
+            onClick={() => setOpenList(true)}
+          />
+          <span onClick={() => setOpenList((prev) => !prev)}>
+            {openList ? <ChevroneUp /> : <ChevronDown />}
+          </span>
+
+          <IconCross clearInput={clearInput} />
+        </div>
       </div>
       <CSSTransition
         in={openList}
@@ -72,21 +105,23 @@ export const Select: FC<SelectProps> = ({
           createPortal(
             <div className="selectItemsWrapper" style={{ top, left, width }}>
               <ListItems
-                onChange={(val: string) => {
-                  onChange(val);
-                  setSearchValue("");
-
-                  if (!multiply) {
-                    setOpenList(false);
-                  }
-                }}
                 value={value}
                 options={options}
                 renderOptions={renderOptions}
-                multiply={multiply}
+                multiple={multiple}
                 loading={loading}
                 searchValue={searchValue}
-                isActive={isActive}
+                onChange={(selectOption) => {
+                  setSearchValue("");
+                  onChange(
+                    selectOption as Multiple extends true ? Option[] : Option
+                  );
+                  setIsOpenSearchInput(false);
+
+                  if (!multiple) {
+                    setOpenList(false);
+                  }
+                }}
               />
             </div>,
             document.body,

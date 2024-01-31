@@ -1,58 +1,61 @@
-import { FC, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Item } from "./Item";
-import { ListItemsProps } from "./ListItems";
+import { BaseSelectOption } from "../types";
 
-interface MultiplySelectProps extends ListItemsProps {
-  isActive: React.MutableRefObject<string | undefined>;
+export interface MultiplySelectProps<Option extends BaseSelectOption> {
+  value?: Option[];
+  options: Option[];
+  onChange: (selectedOption: Option[]) => void;
+  searchValue: string;
 }
-
-export const MultiplySelect: FC<MultiplySelectProps> = ({
+export const MultiplySelect = <Option extends BaseSelectOption>({
   value,
   options,
-  isActive,
   onChange,
-  // searchValue,
-}) => {
-  const allTittles = useRef<string[]>([]);
+  searchValue,
+}: MultiplySelectProps<Option>) => {
+  const allValues = useRef<Option[]>([]);
 
   useEffect(() => {
-    if (value) {
-      allTittles.current.push(value);
+    if (Array.isArray(value)) {
+      allValues.current = value;
+    } else if (typeof value === "object") {
+      allValues.current.push(value);
     }
+
+    return () => {
+      allValues.current = [];
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // const filterArr = options.filter((el) => {
-  //   if (!value || !lastValue.current) {
-  //     return true;
-  //   }
+  const filterArr = options.filter((el) => {
+    if (!searchValue) {
+      return true;
+    }
 
-  //   const lastWord = value.split(",").pop();
+    if (el.title.toLowerCase().includes(searchValue)) {
+      return true;
+    }
+  });
 
-  //   if (el.title.includes(String(lastWord)) && !!lastWord) {
-  //     return true;
-  //   }
-
-  //   return false;
-  // });
-
-  return options.map(({ id, title, value }) => {
+  return filterArr.map((element) => {
+    const { id, title } = element;
+    const activeId = allValues.current.map((el) => el.id);
+    const isActive = activeId.includes(id);
     return (
       <Item
-        key={title + value}
-        value={value}
+        key={title + id}
         onChange={() => {
-          if (isActive.current) {
-            isActive.current = `${isActive.current}, ${id}`;
+          if (isActive) {
+            allValues.current = allValues.current.filter((el) => el.id !== id);
           } else {
-            isActive.current = id;
+            allValues.current.push(element);
           }
 
-          allTittles.current.push(title);
-
-          onChange(allTittles.current.toString());
+          onChange([...allValues.current]);
         }}
-        isActive={!!isActive.current?.includes(id)}
+        isActive={isActive}
       >
         {title}
       </Item>

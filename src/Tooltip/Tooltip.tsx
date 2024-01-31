@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useRef, useState } from "react";
 import styles from "./style.module.css";
 import { createPortal } from "react-dom";
 import { CSSTransition } from "react-transition-group";
@@ -9,27 +9,37 @@ import "./animation.css";
 type TooltipProps = {
   position: TooltipPosition;
   content: string | JSX.Element;
-  children: <T>(props: T) => JSX.Element;
+  children: (props: {
+    onMouseEnter: React.MouseEventHandler;
+    onMouseLeave: React.MouseEventHandler;
+  }) => JSX.Element;
 };
-export const Tooltip: FC<TooltipProps> = ({
-  position,
-  content,
-  children,
-  ...props
-}) => {
+export const Tooltip: FC<TooltipProps> = ({ position, content, children }) => {
   const [currentElement, setCurrentElement] = useState<Element | null>(null);
   const { top, left, width } = useCoordinates(currentElement);
 
-  const onMouseEnter = (e: MouseEvent) => {
-    setCurrentElement(e.currentTarget as Element);
+  const elementLink = useRef<Element | null>(null);
+
+  const onMouseEnter = (e: React.MouseEvent) => {
+    elementLink.current = e.currentTarget;
+    setTimeout(() => {
+      const element = elementLink.current;
+
+      if (!element) {
+        return;
+      }
+      setCurrentElement(element);
+    }, 300);
   };
 
   const onMouseLeave = () => {
+    elementLink.current = null;
     setCurrentElement(null);
   };
+
   return (
     <>
-      {children({ onMouseEnter, onMouseLeave, ...props })}
+      {children({ onMouseEnter, onMouseLeave })}
       {createPortal(
         <CSSTransition
           in={!!currentElement}

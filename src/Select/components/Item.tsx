@@ -2,7 +2,6 @@ import { FC } from "react";
 
 type ItemProps = {
   children: JSX.Element | string;
-  value: string;
   onChange: VoidFunction;
   isActive: boolean;
 };
