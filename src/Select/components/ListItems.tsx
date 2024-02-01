@@ -1,7 +1,7 @@
 import { BaseSelectOption } from "../types";
 import { Item } from "./Item";
-import { MultiplySelect } from "./MultiplySelect";
 import { Spinner } from "../../share/Spinner/Spinner";
+import { getStatus } from "../helpers";
 
 export interface ListItemsProps<
   Option extends BaseSelectOption,
@@ -9,9 +9,7 @@ export interface ListItemsProps<
 > {
   value?: Multiple extends true ? Option[] : Option;
   options: Option[];
-  onChange: (
-    selectedOption?: Multiple extends true ? Option[] : Option
-  ) => void;
+  onChange: (selectedOption?: Option[] | Option) => void;
   renderOptions?: (option: Option) => JSX.Element;
   multiple: Multiple;
   loading?: boolean;
@@ -34,41 +32,38 @@ export const ListItems = <
     return <Spinner />;
   }
 
-  if (renderOptions) {
-    return options.map(renderOptions);
-  }
-
-  if (multiple && value) {
-    return (
-      <MultiplySelect
-        value={value as Option[]}
-        options={options}
-        onChange={onChange as (selectedOption: Option[]) => void}
-        searchValue={searchValue}
-      />
-    );
-  }
-
   const filterArr = options.filter((el) => {
     if (el.title.toLowerCase().includes(searchValue.toLowerCase())) {
       return true;
     }
   });
 
+  if (renderOptions) {
+    return filterArr.map(renderOptions);
+  }
+
   return filterArr.map((el) => {
     const { id, title } = el as Option;
-    const isActive = Array.isArray(value)
-      ? value.some((el) => el.id === id)
-      : value?.id === id;
+    const isActive = getStatus(multiple, id, value);
 
     return (
       <Item
         key={id + "" + value}
         onChange={() => {
-          if (isActive) {
-            onChange(undefined);
+          if (multiple) {
+            if (Array.isArray(value)) {
+              const resultArray = isActive
+                ? value.filter((el) => el.id !== id)
+                : [...value, el];
+
+              onChange(resultArray);
+            } else {
+              onChange([el]);
+            }
           } else {
-            onChange(el as Multiple extends true ? Option[] : Option);
+            const selectedEl = isActive ? undefined : el;
+
+            onChange(selectedEl);
           }
         }}
         isActive={isActive}

@@ -9,9 +9,7 @@ export interface SelectProps<
 > {
   value?: Multiple extends true ? Option[] : Option;
   options: Option[];
-  onChange: (
-    selectedOption?: Multiple extends true ? Option[] : Option
-  ) => void;
+  onChange: (selectedOption?: Option[] | Option) => void;
   multiple?: Multiple;
   renderOptions?: (option: Option) => JSX.Element;
   loading?: boolean;
