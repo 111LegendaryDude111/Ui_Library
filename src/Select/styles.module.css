@@ -18,8 +18,26 @@
 
 .mainInputWrapper {
   display: flex;
-  justify-content: center;
-  align-items: center;
   gap: 10px;
   padding: 20px;
+  flex-direction: column;
+  /* border: 1px solid black; */
+}
+
+.multipleTitle {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  width: 400px;
+}
+
+.inputBlock {
+  display: flex;
+  gap: 20px;
+}
+
+.inputStyle {
+  width: 300px;
+  border: none;
+  outline: none;
 }

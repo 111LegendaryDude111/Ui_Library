@@ -7,6 +7,7 @@ import { Tooltip, TooltipPosition } from "./Tooltip/Tooltip";
 import { Select } from "./Select/Select";
 // import { Item } from "./Select/components/Item";
 import { BaseSelectOption } from "./Select/types";
+// import { PaginationList } from "./PaginationList/PaginationList";
 
 const ContentComponent3: FC = () => {
   const [isVisibleModalTwo, setIsVisibleModalTwo] = useState<boolean>(false);
@@ -96,22 +97,12 @@ function App() {
     { label: "option9", value: "Опция 9" },
   ];
 
-  /*
-  <Select 
-    value={}
-    onChange={}
-    onSearchChange={}
-    multiple={true}
-    options={options}
-    renderOption={option => <div>{option.title}</div>}
-    loading={false}
-/>
-*/
-
   const [selectValue, setSelectValue] = useState<SelecetEntity[] | undefined>();
 
-  const onChangeSelect = (selectedOption: SelecetEntity[] | undefined) => {
-    setSelectValue(selectedOption);
+  const onChangeSelect = (selectedOption?: SelecetEntity[] | SelecetEntity) => {
+    if (Array.isArray(selectedOption)) {
+      setSelectValue(selectedOption);
+    }
   };
 
   const selectOptions: SelecetEntity[] = useMemo(() => {
@@ -175,7 +166,10 @@ function App() {
           //     : false;
 
           //   return (
-          //     <Item onChange={() => onChangeSelect(option)} isActive={isActive}>
+          //     <Item
+          //       onChange={() => onChangeSelect([option])}
+          //       isActive={isActive}
+          //     >
           //       {option.title}
           //     </Item>
           //   );
@@ -223,6 +217,7 @@ function App() {
         header={"Header"}
         content={<ContentComponent />}
       />
+      {/* <PaginationList /> */}
     </div>
   );
 }
