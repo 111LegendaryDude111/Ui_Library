@@ -1,5 +1,11 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { LayerManager } from "../LayerManager";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
+import { useRafThrottle } from "./useRafThrottle";
 
 type Coordinates = {
   top: number;
@@ -13,33 +19,44 @@ export const useCoordinates = (
   cbOnResize?: VoidFunction
 ) => {
   const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
-  const [recalculate, setRecalculate] = useState(false);
   const resizeCb = useRef(cbOnResize);
+  const rafThrottled = useRafThrottle();
+
+  const resizeCalculate = useCallback(() => {
+    resizeCb.current?.();
+    if (!refElement) {
+      return;
+    }
+
+    const { top, left, width, bottom } = refElement.getBoundingClientRect();
+
+    setCoordinates({ top, left, width, bottom });
+  }, [refElement]);
 
   useLayoutEffect(() => {
     if (!refElement) return;
 
-    const resize = new ResizeObserver(() => {
-      const { top, left, width, bottom } = refElement.getBoundingClientRect();
+    const trottledCb = rafThrottled(resizeCalculate);
 
-      setCoordinates({ top, left, width, bottom });
-    });
+    const resize = new ResizeObserver(trottledCb);
 
     resize.observe(refElement);
 
     return () => {
+      resize.disconnect();
       setCoordinates(null);
     };
-  }, [refElement, recalculate]);
+  }, [rafThrottled, refElement, resizeCalculate]);
 
   useEffect(() => {
-    const removeResize = LayerManager.addResizeEvent(() => {
-      resizeCb.current?.();
-      setRecalculate((prev) => !prev);
-    });
+    const trottledCb = rafThrottled(resizeCalculate);
 
-    return () => removeResize();
-  }, []);
+    window.addEventListener("resize", trottledCb);
+
+    return () => {
+      window.removeEventListener("resize", trottledCb);
+    };
+  }, [rafThrottled, resizeCalculate]);
 
   return {
     top: coordinates?.top ? coordinates.top : undefined,

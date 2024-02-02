@@ -10,7 +10,7 @@ export interface ListItemsProps<
   value?: Multiple extends true ? Option[] : Option;
   options: Option[];
   onChange: (selectedOption?: Option[] | Option) => void;
-  renderOptions?: (option: Option) => JSX.Element;
+  renderOption?: (option: Option) => JSX.Element;
   multiple: Multiple;
   loading?: boolean;
   searchValue: string;
@@ -23,7 +23,7 @@ export const ListItems = <
   value,
   options,
   onChange,
-  renderOptions,
+  renderOption,
   multiple,
   loading,
   searchValue,
@@ -38,8 +38,8 @@ export const ListItems = <
     }
   });
 
-  if (renderOptions) {
-    return filterArr.map(renderOptions);
+  if (renderOption) {
+    return filterArr.map(renderOption);
   }
 
   return filterArr.map((el) => {

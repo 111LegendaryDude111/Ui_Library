@@ -6,9 +6,7 @@ export const getStatus = <Option extends BaseSelectOption>(
   value?: Option | Option[]
 ) => {
   if (multiple && Array.isArray(value)) {
-    const arrayofActivityId = value.map((el) => el.id);
-
-    return arrayofActivityId.includes(id);
+    return value.some((el) => el.id === id);
   }
 
   return Array.isArray(value)

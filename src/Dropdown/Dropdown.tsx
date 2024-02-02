@@ -27,11 +27,7 @@ const Dropdown: React.FC<DropdownProps> & { Option: React.FC<OptionProps> } = ({
 
   const ref = useRef<HTMLDivElement | null>(null);
 
-  const {
-    top,
-    left,
-    width: widthFromHook,
-  } = useCoordinates(ref.current, toggle);
+  const { top, left, width: widthFromHook } = useCoordinates(ref.current);
 
   return (
     <div ref={ref}>

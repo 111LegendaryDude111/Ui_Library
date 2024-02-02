@@ -5,7 +5,6 @@ import { ModalPosition } from "./Modal/types";
 import { Dropdown } from "./Dropdown/Dropdown";
 import { Tooltip, TooltipPosition } from "./Tooltip/Tooltip";
 import { Select } from "./Select/Select";
-// import { Item } from "./Select/components/Item";
 import { BaseSelectOption } from "./Select/types";
 // import { PaginationList } from "./PaginationList/PaginationList";
 
@@ -160,20 +159,6 @@ function App() {
           onChange={onChangeSelect}
           options={selectOptionsFromServer ?? selectOptions}
           loading={isLoading}
-          // renderOptions={(option) => {
-          //   const isActive = selectValue
-          //     ? selectValue.map((el) => el.id).includes(option.id)
-          //     : false;
-
-          //   return (
-          //     <Item
-          //       onChange={() => onChangeSelect([option])}
-          //       isActive={isActive}
-          //     >
-          //       {option.title}
-          //     </Item>
-          //   );
-          // }}
         />
       </div>
       <div>
