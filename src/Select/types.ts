@@ -11,6 +11,6 @@ export interface SelectProps<
   options: Option[];
   onChange: (selectedOption?: Option[] | Option) => void;
   multiple?: Multiple;
-  renderOptions?: (option: Option) => JSX.Element;
+  renderOption?: (option: Option) => JSX.Element;
   loading?: boolean;
 }

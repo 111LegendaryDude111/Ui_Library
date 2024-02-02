@@ -22,14 +22,6 @@ class LayerManagerClass {
     close?.();
   }
 
-  addResizeEvent(fn: VoidFunction) {
-    window.addEventListener("resize", fn);
-
-    return () => {
-      removeEventListener("resize", fn);
-    };
-  }
-
   private addListener() {
     document.addEventListener("keydown", (e: KeyboardEvent) => {
       if (e.key === "Escape") {

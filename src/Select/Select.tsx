@@ -21,7 +21,7 @@ export const Select = <
     options,
     onChange,
     multiple = false,
-    renderOptions,
+    renderOption,
     loading,
   } = props;
   const [openList, setOpenList] = useState(false);
@@ -44,9 +44,7 @@ export const Select = <
 
   const inputValue = Array.isArray(value) ? "" : value ? value.title : "";
 
-  const { bottom, left, width } = useCoordinates(inputWrapper.current, () => {
-    setOpenList(false);
-  });
+  const { bottom, left, width } = useCoordinates(inputWrapper.current);
 
   return (
     <>
@@ -94,14 +92,13 @@ export const Select = <
               <ListItems
                 value={value}
                 options={options}
-                renderOptions={renderOptions}
+                renderOption={renderOption}
                 multiple={multiple}
                 loading={loading}
                 searchValue={searchValue}
                 onChange={(selectOption) => {
                   setSearchValue("");
                   onChange(selectOption);
-                  // setOpenList(false);
                 }}
               />
             </div>,
