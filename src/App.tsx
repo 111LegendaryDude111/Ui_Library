@@ -6,6 +6,7 @@ import { Dropdown } from "./Dropdown/Dropdown";
 import { Tooltip, TooltipPosition } from "./Tooltip/Tooltip";
 import { Select } from "./Select/Select";
 import { BaseSelectOption } from "./Select/types";
+import { PaginationList } from "./PaginationList/PaginationList";
 // import { PaginationList } from "./PaginationList/PaginationList";
 
 const ContentComponent3: FC = () => {
@@ -151,7 +152,7 @@ function App() {
         alignItems: "center",
       }}
     >
-      <div>
+      {/* <div>
         <span style={{ fontSize: "20px", fontWeight: 600 }}>Select</span>
         <Select
           value={selectValue}
@@ -201,8 +202,8 @@ function App() {
         modalPosition={ModalPosition.center}
         header={"Header"}
         content={<ContentComponent />}
-      />
-      {/* <PaginationList /> */}
+      /> */}
+      <PaginationList />
     </div>
   );
 }
