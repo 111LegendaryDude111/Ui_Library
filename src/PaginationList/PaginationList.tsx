@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { Spinner } from "../share/Spinner/Spinner";
 import { Posts } from "./types";
 import { useDebounce } from "../hooks/useDebounce";
@@ -10,7 +10,6 @@ export const PaginationList: FC = () => {
   const [posts, setPosts] = useState<Posts[] | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [page, setPage] = useState(0);
-  const controller = useRef(new AbortController());
 
   const debounceValue = useDebounce(value, 1_000);
 
@@ -18,8 +17,8 @@ export const PaginationList: FC = () => {
 
   useEffect(() => {
     setLoading(true);
-
-    getPosts(debounceValue, page, 50, controller.current.signal).then(
+    const controller = new AbortController();
+    getPosts(debounceValue, page, 50, controller.signal).then(
       (data: Posts[]) => {
         setPosts((prev) => {
           if (Array.isArray(prev) && page > 0) {
@@ -33,10 +32,9 @@ export const PaginationList: FC = () => {
     );
 
     return () => {
-      controller.current.abort();
-      controller.current = new AbortController();
+      controller.abort();
     };
-  }, [controller, debounceValue, lastValue, page]);
+  }, [debounceValue, lastValue, page]);
   return (
     <div
       style={{
