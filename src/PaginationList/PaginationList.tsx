@@ -1,47 +1,42 @@
-import { FC, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { Spinner } from "../share/Spinner/Spinner";
 import { Posts } from "./types";
-import { getPosts } from "./helpers";
 import { useDebounce } from "../hooks/useDebounce";
+import { getPosts } from "./helpers";
+import { useLastValue } from "../hooks/useLastValue";
 
-interface PaginationListProps {}
-export const PaginationList: FC<PaginationListProps> = () => {
+export const PaginationList: FC = () => {
   const [value, setValue] = useState("");
   const [posts, setPosts] = useState<Posts[] | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const searchParams = useRef({ searchValue: "", limit: 50, start: 0 });
+  const [page, setPage] = useState(0);
+  const controller = useRef(new AbortController());
 
   const debounceValue = useDebounce(value, 1_000);
 
-  useEffect(() => {
-    if (!debounceValue) return;
-    const { searchValue, limit, start } = searchParams.current;
+  const lastValue = useLastValue(debounceValue);
 
+  useEffect(() => {
     setLoading(true);
-    fetch(
-      `https://jsonplaceholder.typicode.com/posts?title_like=${searchValue}&_start=${start}&_limit=${limit}`
-    )
-      .then((res) => res.json())
-      .then((data: Posts[]) => {
+
+    getPosts(debounceValue, page, 50, controller.current.signal).then(
+      (data: Posts[]) => {
         setPosts((prev) => {
-          if (Array.isArray(prev)) {
+          if (Array.isArray(prev) && page > 0) {
             return [...prev, ...data];
           }
 
           return data;
         });
         setLoading(false);
-      });
-  }, [debounceValue]);
+      }
+    );
 
-  useLayoutEffect(() => {
-    searchParams.current.searchValue = value;
-
-    if (!!posts && posts?.length > 0) {
-      searchParams.current.start = posts?.length;
-    }
-  });
-
+    return () => {
+      controller.current.abort();
+      controller.current = new AbortController();
+    };
+  }, [controller, debounceValue, lastValue, page]);
   return (
     <div
       style={{
@@ -58,6 +53,9 @@ export const PaginationList: FC<PaginationListProps> = () => {
         value={value}
         onChange={(e) => {
           setValue(e.currentTarget.value);
+          setLoading(true);
+          setPosts(null);
+          setPage(0);
         }}
         placeholder="Введите запрос..."
       />
@@ -70,7 +68,6 @@ export const PaginationList: FC<PaginationListProps> = () => {
           overflow: "auto",
           padding: "20px 10px",
           width: "100%",
-          alignItems: "center",
         }}
       >
         {posts && <div style={{ width: "100%" }}>Total: {posts?.length}</div>}
@@ -82,7 +79,11 @@ export const PaginationList: FC<PaginationListProps> = () => {
             overflow: "auto",
           }}
         >
-          {!posts && loading && <Spinner />}
+          {!posts && loading && (
+            <span style={{ position: "absolute", left: "50%", top: "40%" }}>
+              <Spinner />
+            </span>
+          )}
           {posts &&
             posts.map((post, i) => {
               const { userId, title, body } = post;
@@ -100,29 +101,13 @@ export const PaginationList: FC<PaginationListProps> = () => {
               );
             })}
         </div>
-        {Array.isArray(posts) && loading && <Spinner />}
       </div>
 
-      <button
-        onClick={async () => {
-          setLoading(true);
-          const posts = await getPosts(
-            debounceValue,
-            searchParams.current.start,
-            searchParams.current.limit
-          );
-          setLoading(false);
-          setPosts((prev) => {
-            if (Array.isArray(prev)) {
-              return [...prev, ...posts];
-            }
-
-            return posts;
-          });
-        }}
-      >
-        Показать еще
-      </button>
+      {posts && posts.length % 50 === 0 && (
+        <button onClick={() => setPage((prev) => prev + 1)}>
+          {loading ? "Загрузка..." : "Показать еще"}
+        </button>
+      )}
     </div>
   );
 };

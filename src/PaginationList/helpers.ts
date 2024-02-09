@@ -3,14 +3,19 @@ import { Posts } from "./types";
 export const getPosts = async (
   searchValue: string,
   start: string | number,
-  limit: string | number
+  limit?: string | number,
+  abortSignal?: AbortSignal
 ) => {
-  let resp: null | Posts[] = null;
+  limit = limit ? Number(limit) : 50;
+  start = Number(start) * limit;
   const req = await fetch(
-    `https://jsonplaceholder.typicode.com/posts?title_like=${searchValue}&_start=${start}&_limit=${limit}`
+    `https://jsonplaceholder.typicode.com/posts?title_like=${searchValue}&_start=${start}&_limit=${
+      limit ?? 50
+    }`,
+    {
+      signal: abortSignal,
+    }
   );
 
-  resp = req.json() as unknown as Posts[];
-
-  return resp;
+  return req.json() as unknown as Posts[];
 };
